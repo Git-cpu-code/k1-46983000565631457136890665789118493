@@ -301,8 +301,8 @@ const overlay = document.getElementById('overlay');
 const noteDisplay = document.getElementById('note-display');
 const overlayOpacity = 0.9;
 const activeKeys = new Set(); // Set für aktive Tasten
-let graceTimeout;
-const gracePeriod = 50; // Grace Period für "gleichzeitiges Drücken"
+var graceTimeout;
+var gracePeriod = 50; // Grace Period für "gleichzeitiges Drücken"
 // Zuordnung von Tasten zu den Audiodateien
 const sounds = {
     'key-a0': 'sounds/a0.mp3',
