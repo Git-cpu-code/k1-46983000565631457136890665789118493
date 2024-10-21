@@ -518,7 +518,7 @@ function handleNoteDisplay(key, duration) {
     }
 
     const noteImage = `images2/${noteImages[noteType]}`;
-    const octave = key.getAttribute('data-note') || 0;  // Sicherstellen, dass 'data-note' vorhanden ist
+    const octave = key.getAttribute('data2-note') || 0;  // Sicherstellen, dass 'data-note' vorhanden ist
     const topPosition = calculateNotePosition(octave);
 
     let img = document.createElement('img');
