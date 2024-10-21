@@ -293,14 +293,17 @@
 
 <div id="overlay" class="overlay"></div>
 <div id="note-display"></div>
-<img id="staff" src="images2/staff.jpeg" alt="Notenlinien">
+<img id="staff" src="images/staff.jpeg" alt="Notenlinien">
 <div id="error-message" style="color: red; display: none; z-index:10;"></div>
 
 <script>
 const overlay = document.getElementById('overlay');
 const noteDisplay = document.getElementById('note-display');
 const overlayOpacity = 0.9;
+const activeKeys = new Set(); // Set für aktive Tasten
+let graceTimeout;
 
+const gracePeriod = 50; // Grace Period für "gleichzeitiges Drücken"
 // Zuordnung von Tasten zu den Audiodateien
 const sounds = {
     'key-a0': 'sounds/a0.mp3',
@@ -425,36 +428,27 @@ document.querySelectorAll('.white-key,.black-key').forEach(key => {
 
     // Gemeinsame Funktion für touchstart/mousedown
     function handleKeyDown() {
-        // Timeout für Grace Period zurücksetzen
         clearTimeout(graceTimeout);
-        
-        activeKeys.add(key.id); // Taste zu aktiven Tasten hinzufügen
-        
-        // Overlay-Farbe aktualisieren
+        activeKeys.add(key.id);
         updateOverlayColor();
-        
+
         startTime = new Date().getTime();
         
         const audio = new Audio(sounds[key.id]);
         audio.play().catch(error => {
             const errorMessageDiv = document.getElementById('error-message');
             errorMessageDiv.innerText = "Fehler beim Abspielen des Tons: " + error.message;
-            errorMessageDiv.style.display = 'block'; // Fehler anzeigen
+            errorMessageDiv.style.display = 'block';
         });
     }
 
     // Gemeinsame Funktion für touchend/mouseup
     function handleKeyUp() {
         endTime = new Date().getTime();
-        
-        // Note anzeigen
         handleNoteDisplay(key, endTime - startTime);
         
-        // Grace Period starten, um "gleichzeitiges Drücken" zu behandeln
         graceTimeout = setTimeout(() => {
-            activeKeys.delete(key.id); // Taste von aktiven Tasten entfernen
-            
-            // Overlay ausblenden, wenn keine Tasten mehr aktiv sind
+            activeKeys.delete(key.id);
             if (activeKeys.size === 0) {
                 overlay.style.display = 'none';
             } else {
@@ -504,7 +498,7 @@ function blendColors(colors) {
     const g = Math.round(rgbSum[1] / totalColors);
     const b = Math.round(rgbSum[2] / totalColors);
 
-    return `rgba(${r}, ${g}, ${b}, ${overlayOpacity})`; // Alpha-Wert für Overlay
+    return `rgba(${r}, ${g}, ${b}, ${overlayOpacity})`;
 }
 
 // Funktion zur Handhabung der Notenanzeige
@@ -531,16 +525,16 @@ function handleNoteDisplay(key, duration) {
 
     let img = document.createElement('img');
     img.src = noteImage;
-    img.className = `note-img move-fade`; // Animation sofort zuweisen
+    img.className = `note-img move-fade`;
     img.style.top = `${topPosition}px`;
-    img.style.right = '0'; // Beginnt von rechts
-    noteDisplay.appendChild(img); // Neue Note hinzufügen
+    img.style.right = '0';
+    noteDisplay.appendChild(img);
 
-    // Entfernen der Note nach 4 Sekunden
     setTimeout(() => {
         img.remove();
     }, 4000);
 }
+
 
 </script>
 </body>
