@@ -41,45 +41,43 @@
             height: 120px;
             z-index: 1;
         }
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    z-index: 10;
-    pointer-events: none; /* Fügt diese Zeile hinzu, um das Overlay durchlässig zu machen */
-}
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 10;
+            pointer-events: none;
+        }
         #note-display {
             position: fixed;
-            right: 0;
+            top: 0;
+            left: 0;
             width: 100%;
-            text-align: right;
-            z-index: 11;
+            height: 100vh;
+            pointer-events: none;
+		z-index:12;
         }
         .note-img {
             position: fixed;
             width: auto;
-            height: 54.54545454545454545454545454px;
+            height: 54.545px;
             right: 0;
             opacity: 1;
-            transition: transform 14s linear
-            will-change: transform
+            animation: moveFromRight 8s linear forwards; /* Fließende Bewegung über 8 Sekunden */
+		z-index:12;
         }
-        @keyframes moveAndFade {
+        @keyframes moveFromRight {
             0% {
-                transform: translateX(0);
-                opacity: 1;
+                transform: translateX(5vw); /* Start außerhalb des rechten Bildschirmrands */
             }
             100% {
-                transform: translateX(-100vw);
-                opacity: 1;
+                transform: translateX(-100vw); /* Bewegt sich über den gesamten Bildschirm bis zum linken Rand */
             }
         }
-        .move-fade {
-            animation: moveAndFade 4s forwards;
-        }
+
 /* Die Farben und Positionen der Tasten bleiben unverändert */
     #key-a0 { background-color: #8B0000; left: 0px; }
     #key-as0 { background-color: #800080; left: 45px; }
@@ -525,13 +523,13 @@ function handleNoteDisplay(key, duration) {
 
     let img = document.createElement('img');
     img.src = noteImage;
-    img.className = `note-img move-fade`;
+    img.className = `note-img`;
     img.style.top = `${topPosition}px`;
     noteDisplay.appendChild(img);
 
     setTimeout(() => {
         img.remove();
-    }, 4000);
+    }, 8000); // 8 Sekunden Animation
 }
 </script>
 </body>
